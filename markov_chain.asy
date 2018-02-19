@@ -1,16 +1,12 @@
+import arrows_more;
+import connectors;
+
 // Figure parameters
-size(200,0);
-settings.render = 300 / 72;
+settings.render = 300 / 72;  // 300 DPI
+real px = 72 / 300;  // 72 bp = 300 px
 
-// Create a connector between two paths based on centers
-path connector(path path0, pair c0, path path1, pair c1) {
-    path c0c1 = c0 -- c1;
-    real [] i0 = intersect(path0, c0c1);
-    real [] i1 = intersect(path1, c0c1);
-    pair p0 = point(path0, i0[0]);
-    pair p1 = point(path1, i1[0]);
-
-    return p0 -- p1;
+pen rgb256(int r, int g, int b) {
+    return rgb(r/255, g/255, b/255);
 }
 
 struct PenPals {
@@ -25,6 +21,7 @@ struct PenPals {
     }
 }
 
+// Asymptote doesn't have enum, so we'll do this
 struct PenColors {
     int white = 0;
     int gray = 1;
@@ -39,22 +36,26 @@ struct PenColors {
 PenColors pc;
 
 PenPals [] pens;
-pens[pc.white] = PenPals.PenPals(rgb(255, 255, 255), rgb(0, 0, 0));
-pens[pc.gray] = PenPals.PenPals(rgb(245, 245, 245), rgb(102, 102, 102));
-pens[pc.blue] = PenPals.PenPals(rgb(218, 232, 252), rgb(108, 142, 191));
-pens[pc.green] = PenPals.PenPals(rgb(213, 232, 212), rgb(130, 179, 102));
-pens[pc.orange] = PenPals.PenPals(rgb(255, 230, 204), rgb(215, 155, 0));
-pens[pc.yellow] = PenPals.PenPals(rgb(255, 242, 204), rgb(214, 182, 86));
-pens[pc.red] = PenPals.PenPals(rgb(248, 206, 204), rgb(184, 84, 80));
+pens[pc.white] = PenPals.PenPals(rgb256(255, 255, 255), rgb256(0, 0, 0));
+pens[pc.gray] = PenPals.PenPals(rgb256(245, 245, 245), rgb256(102, 102, 102));
+pens[pc.blue] = PenPals.PenPals(rgb256(218, 232, 252), rgb256(108, 142, 191));
+pens[pc.green] = PenPals.PenPals(rgb256(213, 232, 212), rgb256(130, 179, 102));
+pens[pc.orange] = PenPals.PenPals(rgb256(255, 230, 204), rgb256(215, 155, 0));
+pens[pc.yellow] = PenPals.PenPals(rgb256(255, 242, 204), rgb256(214, 182, 86));
+pens[pc.red] = PenPals.PenPals(rgb256(248, 206, 204), rgb256(184, 84, 80));
 
-pen pen_arr = linewidth(1.0);
+pen pen_arr = linewidth(0.5);
 pen pen_cir = linewidth(1.0);
+
+arrowbar arr = Arrow(TriangleHead, angle=30, size=20px);
+arrowbar arrs = Arrows(TriangleHead, angle=30, size=20px);
 
 // Drawing parameters
 pair [] cmp = {N, W, S, E};
 string [] lbl = {"P", "R", "C", "S"};
-int dist = 30;
-real r = 10;
+real dist = 300px;
+real r = 100px;
+real fov = 45.0;  // degrees
 
 // Draw the circles
 path [] circles;
@@ -63,10 +64,9 @@ int idx = 0;
 for (pair c : cmp) {
     centers[idx] = c * dist;
     circles[idx] = circle(centers[idx], r);
-    // filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp, drawpen=pens[pc.blue + idx].dp+pen_cir);
     filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp, drawpen=pen_cir);
-    // label(lbl[idx], centers[idx], p=Helvetica("m", "n")+fontsize(18pt));
-    label("$\textbf{" + lbl[idx] + "}$", centers[idx], p=Helvetica("m", "n")+fontsize(14pt));
+    label("$\textbf{" + lbl[idx] + "}$", centers[idx],
+        p=Helvetica("m", "n")+fontsize(14pt));
     idx += 1;
 }
 
@@ -77,12 +77,11 @@ for (int i = 0; i < circles.length - 1; ++i) {
     for (int j = i + 1; j < circles.length; j += 1) {
         path p1 = circles[j];
         pair c1 = centers[j];
-        draw(connector(p0, c0, p1, c1), arrow=ArcArrows(SimpleHead), p=pen_arr);
+        draw(connector(p0, c0, p1, c1), arrs, p=pen_arr);
     }
 }
 
 // Draw the self connectors
-real fov = 45.0;  // degrees
 for (int i = 0; i < 4; ++i) {
     real ang_beg = 90.0 * (i + 1) - fov / 2;
     real ang_end = ang_beg + fov;
@@ -96,8 +95,8 @@ for (int i = 0; i < 4; ++i) {
     pair pnt_beg = point(circles[i], tim_beg);
     pair pnt_end = point(circles[i], tim_end);
 
-    draw(pnt_beg{dir_beg}..{dir_end}pnt_end, arrow=Arrow(SimpleHead), p=pen_arr);
+    draw(pnt_beg{dir_beg}..{dir_end}pnt_end, arr, p=pen_arr);
 }
 
-frame frame_out = bbox(0.5cm, xmargin=10, filltype=Fill, p=rgb(255, 255, 255));
+frame frame_out = bbox(20px, filltype=Fill, p=white);
 shipout(frame_out);

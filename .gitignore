@@ -1,7 +1,9 @@
+*.*~
+*.aux
 *.eps
+*.log
 *.pdf
 *.png
-*.*~
+.vscode/
 3rd_party/
 old/
-.vscode/

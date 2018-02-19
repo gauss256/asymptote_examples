@@ -40,15 +40,21 @@ path connector(path path0, pair c0, path path1, pair c1) {
 settings.render = 300 / 72;  // 300 DPI
 real px = 72 / 300;  // 72 bp = 300 px
 
-pen pen_box = linewidth(4px);
-pen pen_lin = linewidth(10px)+linecap(0);
+pen pen_box = linewidth(5px);
+pen pen_lin = linewidth(10px)+linecap(0)+linejoin(0);
 pen pen_cir = linewidth(6px);
 
-margin marg = TrueMargin(-4px, 8px);  // a bit empirical
+margin marg = TrueMargin(-4px, 12px);  // a bit empirical
 
-pen pen_blu = rgb(162, 205, 236);
-pen pen_grn = rgb(225, 247, 208);
-pen pen_ppl = rgb(219, 172, 238);
+pen rgb256(int r, int g, int b) {
+    return rgb(r/255, g/255, b/255);
+}
+
+pen pen_blu = rgb256(162, 205, 236);
+pen pen_grn = rgb256(225, 247, 208);
+pen pen_ppl = rgb256(219, 172, 238);
+
+arrowbar arr = Arrow(TriangleHead, angle=30, size=30px);
 
 // Neural network chunk
 pair nnc_c = (0,0);
@@ -89,32 +95,20 @@ path brk_p = shift(brk_ctr-brk_sz2) * box((0,0), (brk_siz,brk_siz));
 
 // Draw the paths and labels
 filldraw(nnc, drawpen=pen_box, fillpen=pen_grn);
-label("A",
-      (0,0),
-      p=Helvetica("m", "n")+fontsize(24pt));
+label("A", (0,0), p=Helvetica("m", "n")+fontsize(25pt));
 
-draw(lpb_sub,
-     Arrow(TriangleHead, angle=30, size=38px),
-     p=pen_lin, margin=marg);
+draw(lpb_sub, arr, p=pen_lin, margin=marg);
 filldraw(brk_p, drawpen=nullpen, fillpen=white);
 
 filldraw(cir_top, drawpen=pen_cir, fillpen=pen_ppl);
-label("$\mathbf{h}_t$",
-      ctr_top,
-      p=fontsize(16pt));
+label("$\mathbf{h}_t$", ctr_top, p=fontsize(16pt));
 
 filldraw(cir_bot, drawpen=pen_cir, fillpen=pen_blu);
-label("$\mathbf{X}_t$",
-      ctr_bot,
-      p=fontsize(16pt));
+label("$\mathbf{X}_t$", ctr_bot, p=fontsize(16pt));
 
-draw(con_top,
-     Arrow(TriangleHead, angle=30, size=38px),
-     p=pen_lin, margin=marg);
+draw(con_top, arr, p=pen_lin, margin=marg);
 
-draw(con_bot,
-     Arrow(TriangleHead, angle=30, size=38px),
-     p=pen_lin, margin=marg);
+draw(con_bot, arr, p=pen_lin, margin=marg);
 
 frame frame_out = bbox(20px, filltype=Fill, p=rgb(255, 255, 255));
 shipout(frame_out);

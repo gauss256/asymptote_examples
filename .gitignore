@@ -1,0 +1,7 @@
+*.eps
+*.pdf
+*.png
+*.*~
+3rd_party/
+old/
+.vscode/

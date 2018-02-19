@@ -44,8 +44,8 @@ pens[pc.orange] = PenPals.PenPals(rgb256(255, 230, 204), rgb256(215, 155, 0));
 pens[pc.yellow] = PenPals.PenPals(rgb256(255, 242, 204), rgb256(214, 182, 86));
 pens[pc.red] = PenPals.PenPals(rgb256(248, 206, 204), rgb256(184, 84, 80));
 
-pen pen_arr = linewidth(0.5);
-pen pen_cir = linewidth(1.0);
+pen pen_arr = linewidth(4px) + white*0.4 + linejoin(0);
+pen pen_cir = linewidth(8px);
 
 arrowbar arr = Arrow(TriangleHead, angle=30, size=20px);
 arrowbar arrs = Arrows(TriangleHead, angle=30, size=20px);
@@ -56,6 +56,7 @@ string [] lbl = {"P", "R", "C", "S"};
 real dist = 300px;
 real r = 100px;
 real fov = 45.0;  // degrees
+margin marg = TrueMargin(6px, 6px);  // a bit empirical
 
 // Draw the circles
 path [] circles;
@@ -64,7 +65,9 @@ int idx = 0;
 for (pair c : cmp) {
     centers[idx] = c * dist;
     circles[idx] = circle(centers[idx], r);
-    filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp, drawpen=pen_cir);
+    // filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp, drawpen=pen_cir);
+    filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp,
+        drawpen=pen_cir+pens[pc.blue + idx].dp);
     label("$\textbf{" + lbl[idx] + "}$", centers[idx],
         p=Helvetica("m", "n")+fontsize(14pt));
     idx += 1;
@@ -77,7 +80,7 @@ for (int i = 0; i < circles.length - 1; ++i) {
     for (int j = i + 1; j < circles.length; j += 1) {
         path p1 = circles[j];
         pair c1 = centers[j];
-        draw(connector(p0, c0, p1, c1), arrs, p=pen_arr);
+        draw(connector(p0, c0, p1, c1), arrs, margin=marg, p=pen_arr);
     }
 }
 
@@ -95,7 +98,7 @@ for (int i = 0; i < 4; ++i) {
     pair pnt_beg = point(circles[i], tim_beg);
     pair pnt_end = point(circles[i], tim_end);
 
-    draw(pnt_beg{dir_beg}..{dir_end}pnt_end, arr, p=pen_arr);
+    draw(pnt_beg{dir_beg}..{dir_end}pnt_end, arr, margin=marg, p=pen_arr);
 }
 
 frame frame_out = bbox(20px, filltype=Fill, p=white);

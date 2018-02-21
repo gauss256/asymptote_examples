@@ -9,3 +9,12 @@ path connector(path path0, pair c0, path path1, pair c1) {
 
     return p0 -- p1;
 }
+
+path connector(path path0, real time0, path path1, real time1) {
+    // Next: two paths, centers, angles
+    pair n0 = rotate(-90) * dir(path0, time0);
+    pair n1 = rotate(90) * dir(path1, time1);
+    pair p0 = point(path0, time0);
+    pair p1 = point(path1, time1);
+    return p0{n0}..{n1}p1;
+}

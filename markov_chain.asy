@@ -44,14 +44,14 @@ pens[pc.orange] = PenPals.PenPals(rgb256(255, 230, 204), rgb256(215, 155, 0));
 pens[pc.yellow] = PenPals.PenPals(rgb256(255, 242, 204), rgb256(214, 182, 86));
 pens[pc.red] = PenPals.PenPals(rgb256(248, 206, 204), rgb256(184, 84, 80));
 
-pen pen_arr = linewidth(4px) + white*0.4 + linejoin(0);
+pen pen_arr = linewidth(2px) + linejoin(0);
 pen pen_cir = linewidth(8px);
 
-arrowbar arr = Arrow(TriangleHead, angle=30, size=20px);
-arrowbar arrs = Arrows(TriangleHead, angle=30, size=20px);
+arrowbar arr = Arrow(TriangleHead, angle=30, size=10px);
+arrowbar arrs = Arrows(TriangleHead, angle=30, size=10px);
 
 // Drawing parameters
-pair [] cmp = {N, W, S, E};
+pair [] cmp = {E, N, W, S};
 string [] lbl = {"P", "R", "C", "S"};
 real dist = 300px;
 real r = 100px;
@@ -65,7 +65,6 @@ int idx = 0;
 for (pair c : cmp) {
     centers[idx] = c * dist;
     circles[idx] = circle(centers[idx], r);
-    // filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp, drawpen=pen_cir);
     filldraw(circles[idx], fillpen=pens[pc.blue + idx].fp,
         drawpen=pen_cir+pens[pc.blue + idx].dp);
     label("$\textbf{" + lbl[idx] + "}$", centers[idx],
@@ -73,20 +72,32 @@ for (pair c : cmp) {
     idx += 1;
 }
 
-// Draw the connectors between circles
-for (int i = 0; i < circles.length - 1; ++i) {
+// Draw one-way connectors between circles
+for (int i = 0; i < circles.length; ++i) {
     path p0 = circles[i];
-    pair c0 = centers[i];
-    for (int j = i + 1; j < circles.length; j += 1) {
-        path p1 = circles[j];
-        pair c1 = centers[j];
-        draw(connector(p0, c0, p1, c1), arrs, margin=marg, p=pen_arr);
-    }
+    real t0 = i + 1.6;
+    path p1 = circles[(i+1)%4];
+    real t1 = t0 + 1.8;
+    draw(connector(p0, t0, p1, t1), arr, margin=marg, p=pen_arr);
+    t0 -= 0.2;
+    t1 += 0.2;
+    draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
 }
+
+// Draw two-way connectors between circles
+// for (int i = 0; i < circles.length - 1; ++i) {
+//     path p0 = circles[i];
+//     pair c0 = centers[i];
+//     for (int j = i + 1; j < circles.length; j += 1) {
+//         path p1 = circles[j];
+//         pair c1 = centers[j];
+//         draw(connector(p0, c0, p1, c1), arrs, margin=marg, p=pen_arr);
+//     }
+// }
 
 // Draw the self connectors
 for (int i = 0; i < 4; ++i) {
-    real ang_beg = 90.0 * (i + 1) - fov / 2;
+    real ang_beg = 90.0 * i - fov / 2;
     real ang_end = ang_beg + fov;
 
     pair dir_beg = (Cos(ang_beg), Sin(ang_beg));

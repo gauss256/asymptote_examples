@@ -44,11 +44,11 @@ pens[pc.orange] = PenPals.PenPals(rgb256(255, 230, 204), rgb256(215, 155, 0));
 pens[pc.yellow] = PenPals.PenPals(rgb256(255, 242, 204), rgb256(214, 182, 86));
 pens[pc.red] = PenPals.PenPals(rgb256(248, 206, 204), rgb256(184, 84, 80));
 
-pen pen_arr = linewidth(2px) + linejoin(0);
+pen pen_arr = linewidth(4px) + linejoin(0);
 pen pen_cir = linewidth(8px);
 
-arrowbar arr = Arrow(TriangleHead, angle=30, size=10px);
-arrowbar arrs = Arrows(TriangleHead, angle=30, size=10px);
+arrowbar arr = Arrow(TriangleHead, angle=30, size=15px);
+arrowbar arrs = Arrows(TriangleHead, angle=30, size=15px);
 
 // Drawing parameters
 pair [] cmp = {E, N, W, S};
@@ -72,7 +72,7 @@ for (pair c : cmp) {
     idx += 1;
 }
 
-// Draw one-way connectors between circles
+// Draw one-way connectors between adjacent circles
 for (int i = 0; i < circles.length; ++i) {
     path p0 = circles[i];
     real t0 = i + 1.6;
@@ -83,6 +83,19 @@ for (int i = 0; i < circles.length; ++i) {
     t1 += 0.2;
     draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
 }
+
+// Draw one-way connectors between opposite circles
+for (int i = 0; i < circles.length; ++i) {
+    path p0 = circles[i];
+    real t0 = i + 2.1;
+    path p1 = circles[(i+2)%4];
+    real t1 = t0 + 1.8;
+    draw(connector(p0, t0, p1, t1), arr, margin=marg, p=pen_arr);
+    t0 -= 0.2;
+    t1 += 0.2;
+    draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
+}
+
 
 // Draw two-way connectors between circles
 // for (int i = 0; i < circles.length - 1; ++i) {

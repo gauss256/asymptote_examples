@@ -72,41 +72,23 @@ for (pair c : cmp) {
     idx += 1;
 }
 
-// Draw one-way connectors between adjacent circles
-for (int i = 0; i < circles.length; ++i) {
+// Draw connectors between circles
+for (int i = 0; i < circles.length - 1; ++i) {
     path p0 = circles[i];
-    real t0 = i + 1.6;
-    path p1 = circles[(i+1)%4];
-    real t1 = t0 + 1.8;
-    draw(connector(p0, t0, p1, t1), arr, margin=marg, p=pen_arr);
-    t0 -= 0.2;
-    t1 += 0.2;
-    draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
+    for (int j = i + 1; j < circles.length; j += 1) {
+
+        // Forward connector
+        real t0 = i / 2 + j / 2 + 1.1;
+        path p1 = circles[j];
+        real t1 = t0 + 1.8;
+        draw(connector(p0, t0, p1, t1), arr, margin=marg, p=pen_arr);
+
+        // Backward connector
+        t0 -= 0.2;
+        t1 += 0.2;
+        draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
+    }
 }
-
-// Draw one-way connectors between opposite circles
-for (int i = 0; i < circles.length; ++i) {
-    path p0 = circles[i];
-    real t0 = i + 2.1;
-    path p1 = circles[(i+2)%4];
-    real t1 = t0 + 1.8;
-    draw(connector(p0, t0, p1, t1), arr, margin=marg, p=pen_arr);
-    t0 -= 0.2;
-    t1 += 0.2;
-    draw(connector(p1, t1, p0, t0), arr, margin=marg, p=pen_arr);
-}
-
-
-// Draw two-way connectors between circles
-// for (int i = 0; i < circles.length - 1; ++i) {
-//     path p0 = circles[i];
-//     pair c0 = centers[i];
-//     for (int j = i + 1; j < circles.length; j += 1) {
-//         path p1 = circles[j];
-//         pair c1 = centers[j];
-//         draw(connector(p0, c0, p1, c1), arrs, margin=marg, p=pen_arr);
-//     }
-// }
 
 // Draw the self connectors
 for (int i = 0; i < 4; ++i) {

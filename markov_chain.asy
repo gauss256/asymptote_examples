@@ -31,8 +31,8 @@ for (int i = 0; i < N; ++i) {
     pair ctr = sep * (Cos(i * 360 / N), Sin(i * 360 / N));
     path cir = circle(ctr, rad);
     filldraw(cir, fillpen=white, drawpen=pen_cir);
-    // label(format("$\textbf{%d}$", i), ctr,
-    //     p=Helvetica("m", "n")+fontsize(14pt));
+    label(format("$\textbf{%d}$", i), ctr,
+        p=Helvetica("m", "n")+fontsize(14pt));
     cirs[i] = cir;
     ctrs[i] = ctr;
 }

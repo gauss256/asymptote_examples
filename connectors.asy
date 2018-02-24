@@ -1,3 +1,7 @@
+// Convert a nominal angle to path time
+real angle2time(path p, real a) {
+    return length(p) * a / 360;
+}
 
 // Create a connector between two paths based on centers
 path connector(path path0, pair c0, path path1, pair c1) {

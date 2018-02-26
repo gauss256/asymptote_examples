@@ -4,7 +4,7 @@ import arrows_more;
 import connectors;
 import pens_more;
 
-int N = 4;  // number of nodes
+int N = 2;  // number of nodes
 
 // Figure parameters
 settings.render = 300 / 72;  // 300 DPI
@@ -53,7 +53,10 @@ for (int i = 0; i < N; ++i) {
 // draw(shift(ctrs[0]) * ((0, -sep)--(0, sep)), dashed);
 
 real ang_a = 180 - 180 * (N - 2) / (2 * N);  // angle to next node
-real ang_d = (360 - 2ang_a) / (N - 2);  // angle between subsequent nodes
+real ang_d = 0;
+if (N > 2) {
+    ang_d = (360 - 2ang_a) / (N - 2);  // angle between subsequent nodes
+}
 real ang_e = 360 / N;  // angle to rotate base node to
 
 // Draw pointers between circles

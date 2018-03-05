@@ -29,7 +29,7 @@ pair [] ctrs;
 
 ctrs[0] = (0,0);
 for (int i = 1; i < num_nodes; ++i) {
-    ctrs[i] = (2sep, 1.5sep - (i - 1) * sep);
+    ctrs[i] = (1.5sep, 1.5sep - (i - 1) * sep);
 }
 for (int i = 0; i < num_nodes; ++i) {
     cirs[i] = circle(ctrs[i], rad);
@@ -50,19 +50,24 @@ void draw_arc_with_label(int idx0, real ang0, int idx1, real ang1, Label L) {
     draw(con, arr, margin=marg, p=pen_arr);
 
     // Draw the label
-    pair mid = point(con, 0.5);  // midpoint of connector
-    pair tgt = dir(con, 0.5);  // tangent at midpoint
+    real aln = arclength(con);
+    real time_mid = arctime(con, aln / 2);
+    pair mid = point(con, time_mid);  // midpoint of connector
+    pair tgt = dir(con, time_mid);  // tangent at midpoint
     real rot = Degrees(atan2(tgt.y, tgt.x));  // angle to rotate label
     rot = rot % 180;
     if (rot > 90) rot -= 180;
     pair nrm = rotate(-90) * tgt;  // normal at midpoint
     if (Degrees(atan2(nrm.y, nrm.x)) > 180) nrm = -nrm;
-    label(rotate(rot) * L, position=shift(35px*nrm) * mid);
+    label(
+        rotate(rot) * L,
+        position=shift(40px * nrm) * mid,
+        p=Helvetica("m", "n")+fontsize(14pt));
 }
 
 int num_arcs = 9;
 real a0 = 180 / (num_arcs - 1);  // angle increment for node 0
-real ai = 10;  // angle increment for node i (i > 0)
+real ai = 20;  // angle increment for node i (i > 0)
 draw_arc_with_label(0,  90 + 0a0, 1, 180 - 1ai, "any");
 draw_arc_with_label(1, 180 + 1ai, 0,  90 - 1a0, "thinking");
 draw_arc_with_label(0,  90 - 2a0, 2, 180 - 1ai, "some");
